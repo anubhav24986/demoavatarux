@@ -1,6 +1,6 @@
 export const REELS = 5
 export const ROWS = 3
-export const SYMBOL_SIZE = 120
+export const SYMBOL_SIZE = 150
 export const REEL_WIDTH = SYMBOL_SIZE + 10
 export const REEL_GAP = 8
 
@@ -18,10 +18,10 @@ export const SPIN_MAX_SPEED = 1.8
 export const SPIN_ACCEL = 0.005         
 
 /** Width reserved on the left side for the Spine character */
-export const CHARACTER_AREA_WIDTH = 450
+export const CHARACTER_AREA_WIDTH = 220
 
 export const CANVAS_WIDTH = CHARACTER_AREA_WIDTH + REELS * (REEL_WIDTH + REEL_GAP) - REEL_GAP + 40
-export const CANVAS_HEIGHT = 560
+export const CANVAS_HEIGHT = 580
 
 export const DEFAULT_BET = 10
 
