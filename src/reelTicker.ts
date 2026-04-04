@@ -65,11 +65,28 @@ function advanceReel(reel: ReelState, dt: number, now: number): void {
     reel.velocity = Math.min(reel.velocity + SPIN_ACCEL * dt, SPIN_MAX_SPEED);
     reel.position += reel.velocity * dt;
   } else {
-    // Inject outcome symbols exactly once at the start of easing
+    // Inject outcome symbols exactly once at the start of easing.
+    // Place them just ABOVE the current visible window so they scroll in
+    // from the top naturally — no texture swap is ever visible to the player.
     if (reel.pendingSymbols) {
+      const len = reel.strip.length;
+      const stripH = len * SYMBOL_SIZE;
+      const displayPos = reel.position % stripH;
+      const reversePos = (stripH - displayPos) % stripH;
+      const baseIndex = Math.floor(reversePos / SYMBOL_SIZE) % len;
+
+      // Insert ROWS symbols starting one step above the current top tile.
+      const insertAt = ((baseIndex - reel.pendingSymbols.length) % len + len) % len;
       for (let row = 0; row < reel.pendingSymbols.length; row++) {
-        reel.strip[reel.pendingInsertAt + row] = reel.pendingSymbols[row];
+        reel.strip[(insertAt + row) % len] = reel.pendingSymbols[row];
       }
+
+      // Recompute targetPosition so the reel stops with insertAt at row 0.
+      const targetDisplayPos = (stripH - insertAt * SYMBOL_SIZE) % stripH;
+      let newTarget = Math.floor(reel.position / stripH) * stripH + targetDisplayPos;
+      if (newTarget <= reel.position) newTarget += stripH;
+      reel.targetPosition = newTarget;
+
       reel.pendingSymbols = null;
     }
 
