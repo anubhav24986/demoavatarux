@@ -95,6 +95,9 @@ function createSymbolContainer(
 
 // ─── component ──────────────────────────────────────────────────────────────
 
+// Total approximate height of all UI content (canvas + button + info + gaps)
+const TOTAL_CONTENT_HEIGHT = CANVAS_HEIGHT + 200;
+
 export default function SlotMachine() {
   const pixiContainerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
@@ -110,6 +113,18 @@ export default function SlotMachine() {
   // const [winLabel, setWinLabel] = useState<string | undefined>();
   const [winAmount, setWinAmount] = useState<number>(0);
   const [balance, setBalance] = useState<number>(100000);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    function updateScale() {
+      const scaleX = window.innerWidth / CANVAS_WIDTH;
+      const scaleY = window.innerHeight / TOTAL_CONTENT_HEIGHT;
+      setScale(Math.min(scaleX, scaleY));
+    }
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
   useEffect(() => {
     let initializedApp: PIXI.Application | null = null;
     let unmounted = false;
@@ -448,10 +463,23 @@ export default function SlotMachine() {
   return (
     <div
       style={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        background: "#16213e",
+      }}
+    >
+    <div
+      style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         gap: 20,
+        transform: `scale(${scale})`,
+        transformOrigin: "center center",
       }}
     >
       <div
@@ -518,6 +546,7 @@ export default function SlotMachine() {
           {"BALANCE: "} ${balance.toFixed(2) || "$100000.00"}
         </div>
       </div>
+    </div>
     </div>
   );
 }
