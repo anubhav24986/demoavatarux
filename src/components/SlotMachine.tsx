@@ -462,6 +462,7 @@ export default function SlotMachine() {
           boxShadow: "0 0 40px rgba(0,200,255,0.3)",
         }}
       />
+      
       <button
         onClick={spin}
         disabled={spinning}
