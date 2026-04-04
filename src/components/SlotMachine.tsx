@@ -239,7 +239,7 @@ export default function SlotMachine() {
       app.stage.addChild(bg);
 
       // ── spine character (behind reels and title) ─────────────────────────
-      const CHAR_SCALE = CANVAS_HEIGHT / CHAR_SKELETON_HEIGHT;
+      const CHAR_SCALE = (CANVAS_HEIGHT / CHAR_SKELETON_HEIGHT) * 0.6;
       character.scale.set(CHAR_SCALE);
       character.x = CHARACTER_AREA_WIDTH / 2;
       character.y = CANVAS_HEIGHT - CHAR_SKELETON_ROOT_Y * CHAR_SCALE;
@@ -491,59 +491,68 @@ export default function SlotMachine() {
         }}
       />
       
-      <button
-        onClick={spin}
-        disabled={spinning}
-        style={{
-          padding: "14px 60px",
-          fontSize: 20,
-          fontWeight: "bold",
-          letterSpacing: 3,
-          border: "none",
-          borderRadius: 50,
-          cursor: spinning ? "not-allowed" : "pointer",
-          background: spinning
-            ? "linear-gradient(135deg, #555, #333)"
-            : "linear-gradient(135deg, #ffd700, #ff8c00)",
-          color: spinning ? "#888" : "#1a1a2e",
-          boxShadow: spinning ? "none" : "0 4px 20px rgba(255, 140, 0, 0.5)",
-          transition: "all 0.2s",
-          textTransform: "uppercase",
-        }}
-      >
-        {spinning ? "Spinning…" : "SPIN"}
-      </button>
       <div
         style={{
-          display: "contents",
+          width: CANVAS_WIDTH,
+          display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           gap: 20,
         }}
       >
+        {/* LEFT — Balance */}
         <div
           style={{
-            fontSize: 28,
+            flex: 1,
+            fontSize: 22,
             fontWeight: "bold",
             color: "#ffd700",
             textShadow: "0 0 20px #ffd700",
-            letterSpacing: 4,
+            letterSpacing: 3,
           }}
         >
-          {"BET: "} ${DEFAULT_BET.toFixed(2) || "$1.00"}
-          {"   ||   WIN:"}${winAmount.toFixed(2) || "$0.00"}
-          {/* {winLabel ?? "★ BIG WIN! ★"} ${winAmount.toFixed(2)} */}
+          BALANCE<br />${balance.toFixed(2)}
         </div>
 
+        {/* CENTER — Win */}
         <div
           style={{
-            fontSize: 28,
+            flex: 1,
+            fontSize: 22,
             fontWeight: "bold",
             color: "#ffd700",
             textShadow: "0 0 20px #ffd700",
-            letterSpacing: 4,
+            letterSpacing: 3,
+            textAlign: "center",
           }}
         >
-          {"BALANCE: "} ${balance.toFixed(2) || "$100000.00"}
+          WIN<br />${winAmount.toFixed(2)}
+        </div>
+
+        {/* RIGHT — Spin button */}
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <button
+            onClick={spin}
+            disabled={spinning}
+            style={{
+              padding: "14px 60px",
+              fontSize: 20,
+              fontWeight: "bold",
+              letterSpacing: 3,
+              border: "none",
+              borderRadius: 50,
+              cursor: spinning ? "not-allowed" : "pointer",
+              background: spinning
+                ? "linear-gradient(135deg, #555, #333)"
+                : "linear-gradient(135deg, #ffd700, #ff8c00)",
+              color: spinning ? "#888" : "#1a1a2e",
+              boxShadow: spinning ? "none" : "0 4px 20px rgba(255, 140, 0, 0.5)",
+              transition: "all 0.2s",
+              textTransform: "uppercase",
+            }}
+          >
+            {spinning ? "Spinning…" : "SPIN"}
+          </button>
         </div>
       </div>
     </div>
