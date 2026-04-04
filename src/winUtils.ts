@@ -36,13 +36,17 @@ export function detectWins(reelStates: ReelState[]): WinCoord[] {
 }
 
 function findElement(matrix: number[][], target: number) {
-  const coordinates :any = [];
+  const coordinates: any = [];
 
   for (let r = 0; r < matrix.length; r++) {
     // Rows (0 to 4)
     for (let c = 0; c < matrix[r].length; c++) {
       // Columns (0 to 2)
-      if ( matrix[r][c] === target &&matrix[r][c] === BONUS_SYM_ID && coordinates.length > 0) {
+      if (
+        matrix[r][c] === target &&
+        matrix[r][c] === BONUS_SYM_ID &&
+        coordinates.length > 0
+      ) {
         if (coordinates[0][0] !== r) {
           coordinates.push([r, c]);
         }
@@ -97,13 +101,28 @@ function findWaysWins(grid: number[][]) {
           initialColumnSymbolPattern.positions.every(
             (item: [number, number], index: number) => {
               // Skip the first item because there's nothing before it to compare
-              if (index === 0 || index >= 3) return true;
+
+              if (index === 0) {
+                return true;
+              }
 
               // Compare current first element with the previous one
               const currentFirst = item[0];
               const previousFirst =
                 initialColumnSymbolPattern.positions[index - 1][0];
-
+              if (index === 3) {
+                return currentFirst - previousFirst <= 1;
+              }
+              if (index > 3) {
+                if (
+                  initialColumnSymbolPattern.positions[index - 1] &&
+                  item[0] - initialColumnSymbolPattern.positions[index - 1][0] >
+                    1
+                ) {
+                  initialColumnSymbolPattern.positions.splice(index, 1);
+                }
+                return true; 
+              }
               return (
                 currentFirst - previousFirst <= 1 &&
                 initialColumnSymbolPattern.positions[0][0] == 0
