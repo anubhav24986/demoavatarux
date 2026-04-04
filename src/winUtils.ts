@@ -1,5 +1,3 @@
-
-
 import * as PIXI from "pixi.js";
 import { ROWS, REELS, SYMBOLS, BONUS_SYM_ID } from "./constants";
 import type { ReelState } from "./reelTicker";
@@ -13,7 +11,6 @@ export type WinCoord = [reelIndex: number, rowIndex: number];
  */
 export function detectWins(reelStates: ReelState[]): WinCoord[] {
   const coords: WinCoord[] = [];
-
 
   let displayGrid: number[][] = [];
   let reelWiseSymbols: number[] = [];
@@ -39,23 +36,29 @@ export function detectWins(reelStates: ReelState[]): WinCoord[] {
 }
 
 function findElement(matrix: number[][], target: number) {
-  const coordinates = [];
+  const coordinates :any = [];
 
   for (let r = 0; r < matrix.length; r++) {
     // Rows (0 to 4)
     for (let c = 0; c < matrix[r].length; c++) {
       // Columns (0 to 2)
-      if (matrix[r][c] === target) {
-        coordinates.push([r, c]);
+      if ( matrix[r][c] === target &&matrix[r][c] === BONUS_SYM_ID && coordinates.length > 0) {
+        if (coordinates[0][0] !== r) {
+          coordinates.push([r, c]);
+        }
+      } else {
+        if (matrix[r][c] === target) {
+          coordinates.push([r, c]);
+        }
       }
     }
   }
 
   return coordinates;
 }
-function transpose(arr: number[][]): number[][] {
-  return arr[0].map((_, colIndex) => arr.map((row) => row[colIndex]));
-}
+// function transpose(arr: number[][]): number[][] {
+//   return arr[0].map((_, colIndex) => arr.map((row) => row[colIndex]));
+// }
 
 function findWaysWins(grid: number[][]) {
   // grid = [
@@ -64,17 +67,17 @@ function findWaysWins(grid: number[][]) {
   //   [9, 10, 11, 6, 18],
   // ];
   let calculatePositionGrid: number[][] = grid;
-  let winningPatternGrid: number[][] = transpose(grid);
+  // let winningPatternGrid: number[][] = transpose(grid);
 
   let initialColumnSymbolPatternList = [];
-  for (let _row = 0; _row < winningPatternGrid.length; _row++) {
-    for (let _col = 0; _col < winningPatternGrid[_row].length; _col++) {
+  for (let _row = 0; _row < calculatePositionGrid.length; _row++) {
+    for (let _col = 0; _col < calculatePositionGrid[_row].length; _col++) {
       let initialColumnSymbolPattern: any = { symbolId: 0, positions: [] };
-      if (BONUS_SYM_ID === winningPatternGrid[_row][_col]) {
+      if (BONUS_SYM_ID === calculatePositionGrid[_row][_col]) {
         initialColumnSymbolPattern.symbolId = BONUS_SYM_ID;
         initialColumnSymbolPattern.positions = findElement(
           calculatePositionGrid,
-          winningPatternGrid[_row][_col],
+          calculatePositionGrid[_row][_col],
         );
         const bonusExists = initialColumnSymbolPatternList.filter(
           (item) => item.symbolId === BONUS_SYM_ID,
@@ -84,24 +87,29 @@ function findWaysWins(grid: number[][]) {
           initialColumnSymbolPatternList.push(initialColumnSymbolPattern);
         }
       } else if (_row == 0) {
-        initialColumnSymbolPattern.symbolId = winningPatternGrid[_row][_col];
+        initialColumnSymbolPattern.symbolId = calculatePositionGrid[_row][_col];
         initialColumnSymbolPattern.positions = findElement(
           calculatePositionGrid,
-          winningPatternGrid[_row][_col],
+          calculatePositionGrid[_row][_col],
         );
-        const hasGapOfOne = initialColumnSymbolPattern.positions.length >= 3 && initialColumnSymbolPattern.positions.every(
-          (item: [number, number], index: number) => {
-            // Skip the first item because there's nothing before it to compare
-            if (index === 0 || index===3) return true;
+        const hasGapOfOne =
+          initialColumnSymbolPattern.positions.length >= 3 &&
+          initialColumnSymbolPattern.positions.every(
+            (item: [number, number], index: number) => {
+              // Skip the first item because there's nothing before it to compare
+              if (index === 0 || index >= 3) return true;
 
-            // Compare current first element with the previous one
-            const currentFirst = item[0];
-            const previousFirst =
-              initialColumnSymbolPattern.positions[index - 1][0];
+              // Compare current first element with the previous one
+              const currentFirst = item[0];
+              const previousFirst =
+                initialColumnSymbolPattern.positions[index - 1][0];
 
-            return currentFirst - previousFirst === 1 && initialColumnSymbolPattern.positions[0][0]==0
-          },
-        );
+              return (
+                currentFirst - previousFirst <= 1 &&
+                initialColumnSymbolPattern.positions[0][0] == 0
+              );
+            },
+          );
         if (hasGapOfOne) {
           initialColumnSymbolPatternList.push(initialColumnSymbolPattern);
         }
@@ -124,7 +132,6 @@ function findWaysWins(grid: number[][]) {
   // );
   return calculateWins;
 }
-
 
 export interface ColumnMatchResult {
   value: number;

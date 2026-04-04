@@ -94,6 +94,16 @@ function outcome(
 }
 
 export const SPIN_OUTCOMES: SpinOutcome[] = [
+  // outcome(
+  //   [
+  //     ['H6', 'M3', 'H3', 'A', 'H6'],
+  //     ['10', 'BONUS', '10', 'BONUS', '10'],
+  //     ['BONUS', 'M2', 'A', '10', 'M3'],
+  //   ],
+  //   '★ JACKPOT! ★',
+  //   // H1 across the entire middle row
+  //   [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1]],
+  // ),
   // ── 5-of-a-kind wins ─────────────────────────────────────────────────────
   outcome(
     [
