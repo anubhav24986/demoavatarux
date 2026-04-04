@@ -144,35 +144,23 @@ function getLandedSymbolIds(reel: ReelState): number[] {
 // ── win resolution ────────────────────────────────────────────────────────────
 
 function resolveWins(reelStates: ReelState[], cb: TickCallbacks): void {
-  const { pendingOutcome, textures, connectTextures } = cb;
-  // const winsTest = detectWins(reelStates);
-  // if (USE_HARDCODED_OUTCOMES && pendingOutcome?.winLabel && winsTest) {
-  if (
-    USE_HARDCODED_OUTCOMES &&
-    pendingOutcome?.winLabel &&
-    pendingOutcome.winCoords
-  ) {
-    // applyWinHighlight(reelStates, winsTest, textures, connectTextures);
-    // const [amount, symbolId] = calculateWinAmountAndSymbolId(
-    //   reelStates,
-    //   winsTest,
-    // );
-    applyWinHighlight(
-      reelStates,
-      pendingOutcome.winCoords,
-      textures,
-      connectTextures,
-    );
+  const {textures, connectTextures } = cb;
+  
+  const wins = detectWins(reelStates);
+  if (USE_HARDCODED_OUTCOMES  && wins) {
+
+    applyWinHighlight(reelStates, wins, textures, connectTextures);
     const [amount, symbolId] = calculateWinAmountAndSymbolId(
       reelStates,
-      pendingOutcome.winCoords,
+      wins,
     );
+
     cb.setWinAmount(amount);
     cb.setBalance((prev) => prev + amount);
     cb.playWinAnim(amount, symbolId);
     cb.onAllReelsStopped(amount, symbolId);
   } else if (!USE_HARDCODED_OUTCOMES) {
-    const wins = detectWins(reelStates);
+    
     if (wins.length > 0) {
       applyWinHighlight(reelStates, wins, textures, connectTextures);
       const [amount, symbolId] = calculateWinAmountAndSymbolId(

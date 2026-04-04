@@ -96,8 +96,30 @@ function findWaysWins(grid: number[][]) {
           calculatePositionGrid,
           calculatePositionGrid[_row][_col],
         );
+
+        let sequesnceCounter = 0;
+        calculatePositionGrid.map((row, i) => {
+          if (row.indexOf(initialColumnSymbolPattern.symbolId) !== -1) {
+            sequesnceCounter++;
+          } 
+          if (
+            (calculatePositionGrid[i].indexOf(
+              initialColumnSymbolPattern.symbolId,
+            ) === -1 &&
+              i !== calculatePositionGrid.length - 1 &&
+              i < 3) ||
+            (sequesnceCounter == 1 &&
+              calculatePositionGrid[i].indexOf(
+                initialColumnSymbolPattern.symbolId,
+              ) > -1 &&
+              i === calculatePositionGrid.length - 1)
+          ) {
+            sequesnceCounter = 0;
+          }
+        });
+
         const hasGapOfOne =
-          initialColumnSymbolPattern.positions.length >= 3 &&
+          sequesnceCounter >= 3 &&
           initialColumnSymbolPattern.positions.every(
             (item: [number, number], index: number) => {
               // Skip the first item because there's nothing before it to compare
@@ -110,10 +132,8 @@ function findWaysWins(grid: number[][]) {
               const currentFirst = item[0];
               const previousFirst =
                 initialColumnSymbolPattern.positions[index - 1][0];
-              if (index === 3) {
-                return currentFirst - previousFirst <= 1;
-              }
-              if (index > 3) {
+
+              if (index >= 3) {
                 if (
                   initialColumnSymbolPattern.positions[index - 1] &&
                   item[0] - initialColumnSymbolPattern.positions[index - 1][0] >
@@ -121,7 +141,7 @@ function findWaysWins(grid: number[][]) {
                 ) {
                   initialColumnSymbolPattern.positions.splice(index, 1);
                 }
-                return true; 
+                return true;
               }
               return (
                 currentFirst - previousFirst <= 1 &&
@@ -143,12 +163,7 @@ function findWaysWins(grid: number[][]) {
     (item) => item.positions.length >= 3,
   );
 
-  // console.log(
-  //   "initialColumnSymbolPattern :::",
-  //   initialColumnSymbolPatternList,
-  //   "::::calculateWins :::",
-  //   calculateWins.length > 0 && calculateWins[0].positions,
-  // );
+ 
   return calculateWins;
 }
 

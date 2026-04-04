@@ -52,6 +52,7 @@ export type SpinOutcome = {
  */
 export const USE_HARDCODED_OUTCOMES = false
 
+
 export const CYCLE_MODE: 'sequential' | 'random' = 'sequential'
 
 // ── sequential cursor ─────────────────────────────────────────────────────────
@@ -94,26 +95,31 @@ function outcome(
 }
 
 export const SPIN_OUTCOMES: SpinOutcome[] = [
-  // outcome(
-  //   [
-  //     ['H6', 'M3', 'H3', 'A', 'H6'],
-  //     ['10', 'BONUS', '10', 'BONUS', '10'],
-  //     ['BONUS', 'M2', 'A', '10', 'M3'],
-  //   ],
-  //   '★ JACKPOT! ★',
-  //   // H1 across the entire middle row
-  //   [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1]],
-  // ),
+    outcome(
+    [
+      ['A',  'K',  'Q',  'J',  '10'],
+      ['H3', 'H3', 'H3', 'M2', 'K' ],
+      ['9',  'Q',  'A',  'H1', 'M4'],
+    ],
+    '★ 3 OF A KIND! ★',
+    // A across the entire middle row
+    [[0, 1], [1, 1], [2, 1]],
+  ),
+  outcome(
+    [
+      ['H6', 'A', '10', 'M2', 'H6'],
+      ['H3', 'A', 'A', 'A', '10'],
+      ['A', 'M2', '10', 'J', 'A'],
+    ],
+    '★ JACKPOT! ★'
+  ),
   // ── 5-of-a-kind wins ─────────────────────────────────────────────────────
   outcome(
     [
       ['M5', 'BONUS', 'M2', 'M2', 'BONUS'],
       ['M4', 'M4', 'M4', 'M4', 'M4'],
       ['M2', '10', 'BONUS', 'K', 'M2'],
-    ],
-    '★ JACKPOT! ★',
-    // H1 across the entire middle row
-    [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1]],
+    ]
   ),
   outcome(
     [
