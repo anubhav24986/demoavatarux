@@ -28,6 +28,23 @@ npm run build    # TypeScript check + production bundle → dist/
 npm run preview  # Serve the production build locally
 ```
 
+## Deploying the dist/ Folder
+
+The build is configured with `base: './'` in [vite.config.ts](vite.config.ts), which means all asset paths in the output are **relative**. This makes the `dist/` folder self-contained — upload it anywhere and it will work without any server configuration.
+
+```
+dist/
+├── index.html          ← open this to run the game
+└── assets/             ← all JS, CSS, and image assets (referenced via relative paths)
+```
+
+**Steps:**
+1. Run `npm run build` to (re)generate `dist/`
+2. Upload the entire `dist/` folder to any static host (Apache, Nginx, GitHub Pages, Netlify, S3, etc.)
+3. Open `index.html` in a browser
+
+> **Note:** The game uses ES modules (`type="module"`), so it must be served over **HTTP/HTTPS** — opening `index.html` directly as a `file://` URL will be blocked by browser CORS policy. Use `npm run preview` for a quick local test of the production build.
+
 ## Project Structure
 
 ```
