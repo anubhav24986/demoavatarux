@@ -41,7 +41,7 @@ import { clearWinHighlight, applyWinHighlight } from "../winUtils";
 
 // ─── symbol textures ─────────────────────────────────────────────────────────
 
-const rawSymbolUrls = import.meta.glob("../../symbols/symbols/*.png", {
+const rawSymbolUrls = import.meta.glob("../../assets/symbols/symbols/*.png", {
   query: "?url",
   import: "default",
   eager: true,

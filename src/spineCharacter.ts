@@ -12,12 +12,12 @@ import {
 
 // Eagerly import every character PNG as a URL
 const characterPngUrls = import.meta.glob(
-  '../character/character/*.png',
+  '../assets/character/character/*.png',
   { query: '?url', import: 'default', eager: true },
 ) as Record<string, string>
 
 
-import characterJson from '../character/character/character.json'
+import characterJson from '../assets/character/character/character.json'
 
 /**
  * Load character textures, build a dynamic atlas, and return a Spine
